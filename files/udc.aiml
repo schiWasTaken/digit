@@ -1,7 +1,311 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<aiml>
+<aiml version="2.0">
+  <!--
+    AIML for: Handwritten Digit Recognition using MobileNetV2
+    File name suggestion: handwritten_mobilenetv2.aiml
+    Usage: upload/import into Pandorabots (https://home.pandorabots.com/).
+  -->
+
+  <!-- fallback / greeting -->
+  <category>
+    <pattern>HI</pattern>
+    <template>
+      Halo — aku adalah bot yang tahu tentang jurnal "Pengenalan Digit Tulisan Tangan dengan MobileNetV2".
+      Tanyakan hal apa saja tentang judul, metode, dataset, hasil, atau referensi. Jika mau, ketik "RINGKASAN" untuk ringkasan lengkap.
+    </template>
+  </category>
+
+  <category>
+    <pattern>HELLO</pattern>
+    <template>
+      Hai! Tanyakan tentang jurnal MobileNetV2 untuk pengenalan digit tulisan tangan. Contoh: "APA AKURASI MODEL?" atau "JELASKAN METODOLOGI".
+    </template>
+  </category>
+
+  <!-- meta / redirect patterns -->
+  <category>
+    <pattern>WHAT IS THIS PAPER ABOUT</pattern>
+    <template>
+      <srai>RINGKASAN</srai>
+    </template>
+  </category>
+
+  <category>
+    <pattern>RINGKASAN</pattern>
+    <template>
+      Jurnal ini membahas penggunaan MobileNetV2, sebuah arsitektur CNN ringan, untuk pengenalan digit tulisan tangan.
+      Data yang digunakan adalah dataset MNIST (60.000 data latih dan 10.000 data uji). Model dilatih pada beberapa epoch dan
+      menunjukkan performa sangat baik—di abstrak tercatat akurasi 98.7%, sedangkan pada bagian hasil tercatat angka training
+      99.34% (0.9934) dan validasi 98.88% (0.9888). Fokus penelitian: akurasi tinggi sambil menekan kompleksitas komputasi
+      menggunakan fitur MobileNetV2 seperti depthwise separable convolution dan inverted residual / linear bottleneck.
+    </template>
+  </category>
+
+  <!-- title -->
+  <category>
+    <pattern>JUDUL</pattern>
+    <template>Pengenalan Digit Tulisan Tangan dengan MobileNetV2 (Handwritten Digit Recognition using MobileNetV2).</template>
+  </category>
+
+  <category>
+    <pattern>WHAT IS THE TITLE</pattern>
+    <template>Pengenalan Digit Tulisan Tangan dengan MobileNetV2 (Handwritten Digit Recognition using MobileNetV2).</template>
+  </category>
+
+  <!-- abstract -->
+  <category>
+    <pattern>ABSTRACT</pattern>
+    <template>
+      Penelitian ini mengusulkan pendekatan efisien untuk pengenalan digit tulisan tangan menggunakan MobileNetV2—arsitektur CNN ringan
+      untuk perangkat mobile. MobileNetV2 memanfaatkan depthwise separable convolution dan inverted residual / linear bottleneck untuk
+      trade-off antara akurasi dan efisiensi. Menggunakan dataset MNIST, model mencapai akurasi setara model kompleks namun dengan parameter
+      jauh lebih sedikit; abstrak menyebutkan akurasi 98.7%.
+    </template>
+  </category>
+
+  <category>
+    <pattern>RINGKASAN ABSTRAK</pattern>
+    <template><srai>ABSTRACT</srai></template>
+  </category>
+
+  <!-- dataset -->
+  <category>
+    <pattern>DATASET</pattern>
+    <template>
+      Dataset yang dipakai adalah MNIST: 60.000 gambar data latih dan 10.000 gambar data uji. Dokumen juga menyebutkan total 15 kelas
+      untuk eksperimen tertentu (catatan: bagian itu tampak seperti contoh berbeda: "jumlah kelas 15, masing-masing 840 foto" — tapi untuk
+      pengenalan digit, MNIST menggunakan 10 kelas digit 0-9). Jika kamu tanya tentang eksperimen lain yang berisi 15 kelas,
+      bot akan jelaskan konteksnya.
+    </template>
+  </category>
+
+  <category>
+    <pattern>HOW MANY CLASSES</pattern>
+    <template>
+      Untuk tugas pengenalan digit (MNIST) jumlah kelas adalah 10 (digit 0 sampai 9).
+    </template>
+  </category>
+
+  <!-- model architecture -->
+  <category>
+    <pattern>MODEL</pattern>
+    <template>
+      Model inti yang dipakai adalah MobileNetV2. MobileNetV2 menggunakan:
+      <ul> 
+        <li>Depthwise separable convolutions (memisahkan convolution spatial &amp; kanal) untuk mengurangi komputasi.</li>
+        <li>Inverted residual blocks dengan linear bottleneck untuk efisiensi representasi.</li>
+        <li>Shortcut connections antar bottleneck untuk aliran informasi.</li>
+      </ul>
+      Jumlah parameter yang tercatat: sekitar 3.538.984 dan depth (kedalaman) 88.
+    </template>
+  </category>
+
+  <category>
+    <pattern>EXPLAIN MOBILENETV2</pattern>
+    <template>
+      MobileNetV2 adalah arsitektur CNN ringan yang mengandalkan depthwise separable convolution untuk menurunkan jumlah operasi,
+      serta inverted residual + linear bottleneck untuk menjaga representasi fitur sambil mempertahankan efisiensi. Pendekatan ini
+      ideal untuk perangkat mobile karena trade-off akurasi vs komputasi yang baik.
+    </template>
+  </category>
+
+  <!-- preprocessing -->
+  <category>
+    <pattern>PREPROCESSING</pattern>
+    <template>
+      Tahapan pra-pemrosesan yang disebutkan:
+      <ol>
+        <li>Menambahkan color channel jika diperlukan (MNIST grayscale lalu disesuaikan agar sesuai input model).</li>
+        <li>Normalisasi piksel untuk stabilitas pelatihan.</li>
+        <li>Opsional: reshaping dan augmentasi sederhana tergantung eksperimen—dokumen fokus pada normalisasi dan penyesuaian channel.</li>
+      </ol>
+    </template>
+  </category>
+
+  <!-- training details -->
+  <category>
+    <pattern>TRAINING</pattern>
+    <template>
+      Pelatihan dilakukan di Google Colab (Jupyter Notebook). Dokumen menyebut pelatihan selama 20 epoch pada suatu bagian,
+      namun juga mencatat kendala pada versi gratis Colab (kesulitan menyelesaikan 10 epoch di CPU); poin penting:
+      <ul>
+        <li>Batch size, optimizer, learning rate tidak dijelaskan rinci dalam dokumen — kamu bisa menanyakan bila ingin contoh kode.</li>
+        <li>GPU jauh mempercepat pelatihan; CPU terbatas menyebabkan eksperimen terhenti lebih awal.</li>
+      </ul>
+    </template>
+  </category>
+
+  <category>
+    <pattern>HOW MANY EPOCHS</pattern>
+    <template>
+      Dokumen menyebut 20 epoch di bagian metode, namun juga menyebut kendala pada Colab gratis sehingga beberapa percobaan
+      tidak menyelesaikan 10 epoch pada CPU. Jadi: target eksperimen = 20 epoch, realisasi tergantung resource.
+    </template>
+  </category>
+
+  <!-- results and accuracy -->
+  <category>
+    <pattern>RESULTS</pattern>
+    <template>
+      Hasil pelatihan menunjukkan performa kuat MobileNetV2 untuk MNIST:
+      <ul>
+        <li>Abstrak menyebutkan akurasi 98.7%.</li>
+        <li>Bagian hasil mencatat akurasi training 0.9934 (99.34%) dan akurasi validasi 0.9888 (98.88%) setelah pelatihan.</li>
+        <li>Loss training ~0.023, loss validasi ~0.0421.</li>
+      </ul>
+      Perbandingan: model ini mendekati akurasi model CNN yang lebih besar namun dengan parameter lebih sedikit.
+    </template>
+  </category>
+
+  <category>
+    <pattern>AKURASI</pattern>
+    <template>
+      Tergantung konteks: abstrak menyebut 98.7%. Pada bagian hasil tercatat validasi 98.88% dan training 99.34%. Semua menunjukkan
+      akurasi tinggi untuk tugas pengenalan digit MNIST.
+    </template>
+  </category>
+
+  <category>
+    <pattern>WHAT IS THE LOSS</pattern>
+    <template>Loss pada pelatihan tercatat sekitar 0.023 (training) dan 0.0421 (validasi) menurut dokumen.</template>
+  </category>
+
+  <!-- confusion matrix / common errors -->
+  <category>
+    <pattern>CONFUSION MATRIX</pattern>
+    <template>
+      Dokumen menyertakan confusion matrix: kesalahan paling sering melibatkan pasangan digit yang mirip secara visual,
+      misalnya 2 vs 3, dan 8 vs 9. Secara umum model benar pada mayoritas sampel tetapi memiliki kesulitan pada digit serupa.
+    </template>
+  </category>
+
+  <category>
+    <pattern>COMMON MISTAKES</pattern>
+    <template>Kesalahan umum: membingungkan 2 dengan 3, dan 8 dengan 9—karena kesamaan bentuk pada beberapa tulisan tangan.</template>
+  </category>
+
+  <!-- usage / predict -->
+  <category>
+    <pattern>HOW TO PREDICT</pattern>
+    <template>
+      Untuk memakai model: lakukan pre-processing (resize, channel, normalisasi), panggil method `predict` pada model terlatih,
+      lalu ambil argmax dari output softmax untuk mendapatkan digit yang diprediksi. Dokumen menyebutkan contoh evaluasi dengan 196 sampel uji.
+    </template>
+  </category>
+
+  <category>
+    <pattern>HOW TO USE MODEL</pattern>
+    <template>Ikuti langkah: load model terlatih, siapkan gambar sama preprocessing seperti saat pelatihan, lalu model.predict(image) -> argmax.</template>
+  </category>
+
+  <!-- limitations -->
+  <category>
+    <pattern>LIMITATIONS</pattern>
+    <template>
+      Batasan yang disebut:
+      <ol>
+        <li>Kinerja bergantung pada sumber daya komputasi; Colab tanpa GPU memperlambat/menyebabkan percobaan tidak selesai.</li>
+        <li>Beberapa digit mirip tetap sulit dibedakan, membutuhkan augmentasi atau dataset lebih bervariasi.</li>
+        <li>Dokumen tidak memberikan semua hyperparameter (batch size, LR, optimizer) sehingga reproduksi penuh memerlukan asumsi atau kode tambahan.</li>
+      </ol>
+    </template>
+  </category>
+
+  <!-- references -->
+  <category>
+    <pattern>REFERENCES</pattern>
+    <template>
+      Dokumen mencantumkan referensi terkait MobileNetV2, transfer learning, dan studi HWR terkini. Contoh referensi terkait:
+      Two decades of Bengali handwritten Digit Recognition (IEEE), penelitian transfer learning MobileNetV2 pada berbagai domain,
+      serta publikasi 2022-2023 terkait HWR dan MobileNetV2. Untuk daftar lengkap, mintalah "DAFTAR REFERENSI".
+    </template>
+  </category>
+
+  <category>
+    <pattern>DAFTAR REFERENSI</pattern>
+    <template>
+      Berikut adalah beberapa referensi yang tercantum:
+      <ol>
+        <li>T. Ghosh et al., Advances in online handwritten recognition, Computer Science Review, 2022.</li>
+        <li>Z. Ullah &amp; M. Jamjoom, Arabic handwritten letter recognition using CNN, PeerJ Computer Science, 2022.</li>
+        <li>M. Islam et al., Efficient approach to using CNN-Based pre-trained models in Bangla handwritten digit recognition, 2023.</li>
+        <li>Y. Gulzar, Fruit Image Classification Model Based on MobileNetV2, Sustainability, 2023.</li>
+        <li>Artikel lain dan sumber IEEE yang relevan—dokumen asli berisi daftar lengkap.</li>
+      </ol>
+    </template>
+  </category>
+
+  <!-- technical Q&A helper: redirect to expanded answers -->
+  <category>
+    <pattern>JELASKAN ARSITEKTUR</pattern>
+    <template>
+      <srai>EXPLAIN MOBILENETV2</srai>
+    </template>
+  </category>
+
+  <!-- long-form: sekompleks mungkin -->
+  <category>
+    <pattern>EXPLAIN IN DETAIL</pattern>
+    <template>
+      Berikut penjelasan panjang tentang pendekatan yang dipakai:
+      <p>
+        1) Pemilihan MobileNetV2: didasarkan pada kebutuhan efisiensi komputasi. MobileNetV2 meminimalkan operasi FLoPs
+        melalui depthwise separable convolution—di mana convolution spatial dan channel dipisah—sehingga beban komputasi turun drastis.
+      </p>
+      <p>
+        2) Inverted residual &amp; linear bottleneck: blok ini memperluas dimensi fitur (1x1 conv), menerapkan depthwise convolution,
+        lalu mem-proyeksikan kembali ke dimensi lebih rendah dengan linear layer. Shortcut connection dipertahankan saat input dan
+        output memiliki bentuk yang kompatibel, memungkinkan informasi low-level melewati blok dan membantu optimisasi.
+      </p>
+      <p>
+        3) Pra-proses: normalisasi intensitas, penyesuaian channel, dan reshaping. Penting memastikan data masukan konsisten dengan
+        ukuran input MobileNetV2 (mis. 224x224 atau diadaptasi ke ukuran kecil tergantung implementasi).
+      </p>
+      <p>
+        4) Training: optimasi hyperparameter diperlukan — optimizer populer: Adam atau SGD+momentum; learning rate scheduler direkomendasikan.
+      </p>
+      <p>
+        5) Evaluasi &amp; analisis: confusion matrix dihasilkan untuk melihat pasangan digit yang sering salah klasifikasi; augmentasi atau
+        fine-tuning dapat mengurangi kesalahan tersebut.
+      </p>
+      <p>
+        Jika mau aku bisa juga keluarkan contoh pseudo-kode Keras untuk arsitektur dan training.
+      </p>
+    </template>
+  </category>
+
+  <!-- redirect requests about code -->
+  <category>
+    <pattern>SHOW CODE</pattern>
+    <template>
+      Aku bisa bantu buatkan contoh snippet Keras/TF untuk membangun MobileNetV2 &amp; training di MNIST. Ketik "KODE KERAS" atau "KODE TENSORFLOW".
+    </template>
+  </category>
+
+  <category>
+    <pattern>KODE KERAS</pattern>
+    <template>
+      Berikut ringkasan langkah (pseudocode) singkat:
+      <think> <!-- tidak memengaruhi pengguna secara visual, tapi kompatibel di beberapa AIML engines -->
+      </think>
+      1) Load MNIST, ubah shape jadi (H,W,3) jika perlu.<br/>
+      2) Normalisasi: x = x / 255.0<br/>
+      3) base = MobileNetV2(include_top=False, input_shape=(H,W,3), weights=None)<br/>
+      4) x = GlobalAveragePooling2D()(base.output)<br/>
+      5) x = Dense(128, activation='relu')(x); x = Dropout(0.2)(x)<br/>
+      6) outputs = Dense(10, activation='softmax')(x)<br/>
+      7) model = Model(inputs=base.input, outputs=outputs)<br/>
+      8) model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])<br/>
+      9) model.fit(x_train, y_train, validation_data=(x_val,y_val), epochs=20, batch_size=32)
+    </template>
+  </category>
+
+  <!-- fallback for unknowns: attempt to be helpful and point to sections -->
   <category>
     <pattern>*</pattern>
-    <template>I have no answer for that.</template>
+    <template>
+      Maaf, aku nggak paham tepatnya — kamu bisa tanya lagi dengan kata kunci seperti: JUDUL, ABSTRAK, DATASET, MODEL, PREPROCESSING, TRAINING, RESULTS, AKURASI, atau REFERENSI. Atau ketik "RINGKASAN" untuk overview lengkap.
+    </template>
   </category>
+
 </aiml>
